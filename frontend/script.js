@@ -1,4 +1,5 @@
-const API_URL = 'http://localhost:3000';
+// OBSOLETO: arquivo legado. As páginas usam agora scripts separados (login.js, cadastro.js, feed.js, post.js).
+const API_URL = '';
 
 // LOGIN
 function login() {

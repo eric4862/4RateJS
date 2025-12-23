@@ -24,7 +24,7 @@ btnPublicar.addEventListener("click", async () => {
     }
 
     try {
-        const response = await fetch("http://localhost:3000/avaliacoes", {
+        const response = await fetch("/avaliacoes", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

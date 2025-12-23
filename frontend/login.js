@@ -8,7 +8,7 @@ form.addEventListener("submit", async (e) => {
   const senha = document.getElementById("senha").value;
 
   try {
-    const resposta = await fetch("http://localhost:3000/usuarios/login", {
+    const resposta = await fetch("/usuarios/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

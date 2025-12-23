@@ -21,7 +21,7 @@ btnPost.addEventListener("click", () => {
 
 async function carregarFeed() {
     try {
-        const response = await fetch("http://localhost:3000/avaliacoes", {
+        const response = await fetch("/avaliacoes", {
             headers: {
                 "Authorization": "Bearer " + token
             }

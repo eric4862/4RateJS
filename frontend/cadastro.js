@@ -9,7 +9,7 @@ form.addEventListener("submit", async (e) => {
   const senha = document.getElementById("senha").value;
 
   try {
-    const resposta = await fetch("http://localhost:3000/usuarios/register", {
+    const resposta = await fetch("/usuarios/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
