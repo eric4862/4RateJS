@@ -1,20 +1,25 @@
-const jwt = require('jsonwebtoken');
-const jwtConfig = require('../config/jwt');
+const jwt = require("jsonwebtoken");
+const jwtConfig = require("../config/jwt");
 
-module.exports = (req, res, next) => {
+function authJwt(req, res, next) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-        return res.status(401).json({ mensagem: 'Token não fornecido' });
+        return res.status(401).json({ erro: "Token não fornecido" });
     }
 
-    const [, token] = authHeader.split(' ');
+    const token = authHeader.startsWith("Bearer ")
+        ? authHeader.substring(7)
+        : authHeader;
 
-    try {
-        const decoded = jwt.verify(token, jwtConfig.secret);
+    jwt.verify(token, jwtConfig.secret, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ erro: "Token inválido" });
+        }
+
         req.usuarioId = decoded.id;
         next();
-    } catch (err) {
-        return res.status(401).json({ mensagem: 'Token inválido ou expirado' });
-    }
-};
+    });
+}
+
+module.exports = authJwt;

@@ -1,67 +1,56 @@
-const express = require('express');
+const express = require("express");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const db = require("../db");
+
 const router = express.Router();
-const db = require('../db');
-const jwt = require('jsonwebtoken');
-const jwtConfig = require('../config/jwt');
 
-// cadastro
-router.post('/cadastro', (req, res) => {
-    const { nome, email, senha } = req.body;
+// 📌 CADASTRO
+router.post("/register", async (req, res) => {
+  const { nome, email, senha } = req.body;
 
-    const sql = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
-    db.query(sql, [nome, email, senha], (err) => {
-        if (err) {
-            return res.status(500).json({ erro: err });
-        }
-        res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso' });
-    });
+  if (!nome || !email || !senha) {
+    return res.status(400).json({ erro: "Preencha todos os campos" });
+  }
+
+  const hash = await bcrypt.hash(senha, 10);
+
+  const sql = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
+
+  db.query(sql, [nome, email, hash], (err) => {
+    if (err) {
+      return res.status(500).json({ erro: "Erro ao cadastrar usuário" });
+    }
+    res.json({ mensagem: "Usuário cadastrado com sucesso" });
+  });
 });
 
-// login com JWT
-router.post('/login', (req, res) => {
-    const { email, senha } = req.body;
+// 📌 LOGIN
+router.post("/login", (req, res) => {
+  const { email, senha } = req.body;
 
-    const sql = 'SELECT * FROM usuarios WHERE email = ? AND senha = ?';
+  const sql = "SELECT * FROM usuarios WHERE email = ?";
 
-    db.query(sql, [email, senha], (err, results) => {
-        if (err) {
-            return res.status(500).json({ erro: err });
-        }
+  db.query(sql, [email], async (err, results) => {
+    if (err || results.length === 0) {
+      return res.status(401).json({ erro: "Usuário não encontrado" });
+    }
 
-        if (results.length === 0) {
-            return res.status(401).json({ mensagem: 'Email ou senha inválidos' });
-        }
+    const usuario = results[0];
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
-        const usuario = results[0];
+    if (!senhaValida) {
+      return res.status(401).json({ erro: "Senha incorreta" });
+    }
 
-        const token = jwt.sign(
-            { id: usuario.id, email: usuario.email },
-            jwtConfig.secret,
-            { expiresIn: jwtConfig.expiresIn }
-        );
+    const token = jwt.sign(
+      { id: usuario.id, nome: usuario.nome },
+      process.env.JWT_SECRET || "segredo",
+      { expiresIn: "2h" }
+    );
 
-        res.json({
-            mensagem: 'Login realizado com sucesso',
-            token: token,
-            usuario: {
-                id: usuario.id,
-                nome: usuario.nome,
-                email: usuario.email
-            }
-        });
-    });
-});
-
-
-// listar usuários
-router.get('/', (req, res) => {
-    const sql = 'SELECT id, nome, email FROM usuarios';
-    db.query(sql, (err, results) => {
-        if (err) {
-            return res.status(500).json({ erro: err });
-        }
-        res.json(results);
-    });
+    res.json({ token });
+  });
 });
 
 module.exports = router;

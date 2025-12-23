@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Nova Avaliação — 4Rate</title>
+    <link rel="stylesheet" href="post.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Nova avaliação</h2>
+
+    <input type="text" id="item_nome" placeholder="Nome do filme, música, série..." />
+
+    <select id="tipo">
+        <option value="">Tipo</option>
+        <option value="filme">Filme</option>
+        <option value="musica">Música</option>
+        <option value="serie">Série</option>
+        <option value="jogo">Jogo</option>
+        <option value="outro">Outro</option>
+    </select>
+
+    <input type="number" id="nota" min="0" max="10" placeholder="Nota (0 a 10)" />
+
+    <textarea id="comentario" placeholder="Comentário (opcional)"></textarea>
+
+    <button id="btnPublicar">Publicar</button>
+    <button id="btnVoltar">Voltar</button>
+
+    <p id="msg"></p>
+</div>
+
+<script src="post.js"></script>
+</body>
+</html>

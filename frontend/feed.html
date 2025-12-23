@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>4Rate - Feed</title>
-    <link rel="stylesheet" href="style.css">
+    <title>4Rate — Feed</title>
+    <link rel="stylesheet" href="feed.css">
 </head>
 <body>
-    <header>
+
+<div class="container">
+    <header class="header">
         <h1>4Rate</h1>
-        <button onclick="logout()">Sair</button>
+        <div class="header-buttons">
+            <button id="btnPost">Nova avaliação</button>
+            <button id="btnLogout">Logout</button>
+        </div>
     </header>
 
-    <section class="avaliacao">
-        <h3>Nova Avaliação</h3>
-
-        <input type="number" id="nota" placeholder="Nota (1 a 5)">
-        <input type="text" id="comentario" placeholder="Comentário">
-        <input type="number" id="id_conteudo" placeholder="ID do Conteúdo">
-
-        <button onclick="avaliar()">Publicar</button>
+    <section class="feed">
+        <h2>Feed de avaliações</h2>
+        <div id="lista-avaliacoes"></div>
     </section>
+</div>
 
-    <section id="feed"></section>
-
-    <script src="script.js"></script>
+<script src="feed.js"></script>
 </body>
 </html>

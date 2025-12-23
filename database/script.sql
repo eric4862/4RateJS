@@ -16,11 +16,14 @@ CREATE TABLE conteudos (
 
 CREATE TABLE avaliacoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nota INT,
+    usuario_id INT NOT NULL,
+    item_nome VARCHAR(255) NOT NULL,
+    tipo ENUM('filme', 'musica', 'serie', 'jogo', 'outro') NOT NULL,
+    nota INT NOT NULL CHECK (nota BETWEEN 0 AND 10),
     comentario TEXT,
-    data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_usuario INT,
-    id_conteudo INT,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-    FOREIGN KEY (id_conteudo) REFERENCES conteudos(id)
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+        ON DELETE CASCADE
 );
+
